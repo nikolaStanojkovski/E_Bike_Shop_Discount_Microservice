@@ -1,0 +1,31 @@
+swagger: '2.0'
+info:
+  title: Discount Microservice API
+  version: "0.1"
+  description: Discount Microservice API for an E-Shop/Renting application
+consumes:
+  - application/json
+produces:
+  - application/json
+basePath: "/api"
+paths:
+  /test1/{test1_id}:
+    get:
+      tags: [ Test1 ]
+      operationId: app.get_test1
+      summary: Testing endpoint
+      parameters:
+        - $ref: '#/parameters/test1_id'
+      responses:
+        200:
+          description: Return test1
+        404:
+          description: Could not load test1
+parameters:
+  test1_id:
+    name: test1_id
+    description: Test1 unique id
+    in: path
+    type: string
+    required: true
+    pattern: "^[a-zA-Z0-9-]+$"
