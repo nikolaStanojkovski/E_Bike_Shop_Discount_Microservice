@@ -9,23 +9,140 @@ produces:
   - application/json
 basePath: "/api"
 paths:
-  /test1/{test1_id}:
-    get:
-      tags: [ Test1 ]
-      operationId: app.get_test1
-      summary: Testing endpoint
+  /coupon/:
+    post:
+      tags: [ User Coupon ]
+      operationId: app.test_add_coupon
+      summary: Testing adding a coupon
       parameters:
-        - $ref: '#/parameters/test1_id'
+        - $ref: '#/parameters/coupon_body'
       responses:
         200:
-          description: Return test1
-        404:
-          description: Could not load test1
+          description: Return status
+
+  /coupons/:
+    get:
+      tags: [ User Coupon ]
+      operationId: app.test_get_all_coupons
+      summary: Testing the get function for all coupons
+      responses:
+        200:
+          description: Return all coupons
+
+  /coupon/{coupon_id}:
+    get:
+      tags: [ User Coupon ]
+      operationId: app.test_get_coupon
+      summary: Testing finding a coupon by id
+      parameters:
+        - $ref: '#/parameters/coupon_id'
+      responses:
+        200:
+          description: Return coupon with the id specified
+
+  /coupon/delete/{coupon_id}:
+    delete:
+      tags: [ User Coupon ]
+      operationId: app.test_delete_coupon
+      summary: Testing deleting a coupon by id
+      parameters:
+        - $ref: '#/parameters/coupon_id'
+      responses:
+        200:
+          description: Delete coupon with the id specified
+
+  /coupon/update/{coupon_id}:
+    put:
+      tags: [ User Coupon ]
+      operationId: app.test_update_coupon
+      summary: Testing an update to a coupon by ic
+      parameters:
+        - $ref: '#/parameters/coupon_id'
+        - $ref: '#/parameters/coupon_put'
+      responses:
+        200:
+          description: Update and return coupon with the id specified
+
+  /coupon/{user_id}:
+    get:
+      tags: [ User Coupon ]
+      operationId: app.test_get_coupon_for_user
+      summary: Testing finding a coupon by user id
+      parameters:
+        - $ref: '#/parameters/user_id'
+      responses:
+        200:
+          description: Return coupon with the user id specified
+
+  /coupon/calculate_discount/:
+    post:
+      tags: [ User Coupon ]
+      operationId: app.test_discount_calculation
+      summary: Testing of the discount calculation for a coupon
+      parameters:
+        - $ref: '#/parameters/coupon_body_discount'
+      responses:
+        200:
+          description: Return status
+
 parameters:
-  test1_id:
-    name: test1_id
-    description: Test1 unique id
+  coupon_body:
+    name: coupon_body
+    description: Test for adding a coupon
+    in: body
+    schema:
+      required:
+        - Id
+        - Type
+        - UserId
+      properties:
+        Id:
+          type: string
+        Type:
+          type: string
+        UserId:
+          type: string
+  coupon_put:
+    name: coupon_put
+    description: Test for updating a coupon
+    in: body
+    schema:
+      required:
+        - UserId
+        - Code
+        - Amount
+      properties:
+        UserId:
+          type: string
+        Code:
+          type: string
+        Amount:
+          type: integer
+
+  coupon_id:
+    name: coupon_id
+    description: The id of the coupon we are looking for
     in: path
-    type: string
     required: true
-    pattern: "^[a-zA-Z0-9-]+$"
+    type: string
+
+  user_id:
+    name: user_id
+    description: The id of the user we are looking for to find the coupon from
+    in: path
+    required: true
+    type: string
+
+  coupon_body_discount:
+    name: coupon_body_discount
+    description: Test for calculating the discount for a coupon
+    in: body
+    schema:
+      required:
+        - UserId
+        - InitialPrice
+      properties:
+        UserId:
+          type: string
+        InitialPrice:
+          type: integer
