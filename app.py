@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 
 # Testing Methods
+# Coupon CRUD
 #####################################################################################################
 #####################################################################################################
 
@@ -45,13 +46,44 @@ def test_discount_calculation(coupon_body_discount):
     return {'price_after_discount': totalPrice}
 
 
+# Testing Methods
+# RentingDiscount CRUD
+#####################################################################################################
+#####################################################################################################
+
+def get_renting_discount(renting_discount_id):
+    return renting_discount_service.renting_discount_read_by_id(renting_discount_id)
+
+
+def get_all_renting_discounts():
+    return renting_discount_service.renting_discount_find_all()
+
+
+def renting_discount_add(renting_discount_body):
+    return renting_discount_service.renting_discount_add(renting_discount_body)
+
+
+def get_renting_discount_for_user(user_id):
+    discount = renting_discount_service.read_renting_discount_by_user(user_id)
+    if discount:
+        return discount
+    else:
+        return {'error': 'Could not find renting discount for user with id {}'.format(user_id)}
+
+
+def renting_discount_delete(renting_discount_id):
+    return renting_discount_service.renting_discount_delete(renting_discount_id)
+
+
+def renting_discount_update(renting_discount_id, renting_discount_put):
+    return renting_discount_service.renting_discount_update(renting_discount_id, renting_discount_put)
+
 #####################################################################################################
 #####################################################################################################
 
 
 def calculate_discount(user_id):
-
-    totalDiscount = 0 # Initial discount
+    totalDiscount = 0  # Initial discount
 
     # General discount logic ...
 
@@ -70,12 +102,14 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 connexion_app.add_api("api.yml")
 
-
 # reference of services and models
 from service.UserCouponService import UserCouponService
+from service.DiscountService import RentingDiscountService
 from models.Coupon import UserCoupon
+from models.Discount import RentingDiscount, BuyingDiscount, ParkingDiscount
 
 couponService = UserCouponService()
+renting_discount_service = RentingDiscountService()
 
 if __name__ == "__main__":
     connexion_app.run(host='0.0.0.0', port=5000, debug=True)

@@ -85,6 +85,70 @@ paths:
         200:
           description: Return status
 
+  /discount/renting/{renting_discount_id}:
+    get:
+      tags: [ Discounts ]
+      operationId: app.get_renting_discount
+      summary: Find renting discount by id
+      parameters:
+        - $ref: '#/parameters/renting_discount_id'
+      responses:
+        200:
+          description: Returned renting discount with the specified id
+
+  /discount/renting/:
+    get:
+      tags: [ Discounts ]
+      operationId: app.get_all_renting_discounts
+      summary: Get all renting discounts
+      responses:
+        200:
+          description: Return all renting discounts
+
+  /discount/renting:
+    post:
+      tags: [ Discounts ]
+      operationId: app.renting_discount_add
+      summary: Adding new renting discount
+      parameters:
+        - $ref: '#/parameters/renting_discount_body'
+      responses:
+        200:
+          description: Return status
+
+  /discount/renting/user/{user_id}:
+    get:
+      tags: [ Discounts ]
+      operationId: app.get_renting_discount_for_user
+      summary: Get discount renting by user
+      parameters:
+        - $ref: '#/parameters/user_id'
+      responses:
+        200:
+          description: Return renting discount with the user id specified
+
+  /discount/renting/delete/{renting_discount_id}:
+    delete:
+      tags: [ Discounts ]
+      operationId: app.renting_discount_delete
+      summary: Deleting renting discount
+      parameters:
+        - $ref: '#/parameters/renting_discount_id'
+      responses:
+        200:
+          description: Delete renting discount with the specified id
+
+  /discount/renting/update/{renting_discount_id}:
+    put:
+      tags: [ Discounts ]
+      operationId: app.renting_discount_update
+      summary: Update renting discount with given id
+      parameters:
+        - $ref: '#/parameters/renting_discount_id'
+        - $ref: '#/parameters/renting_discount_put'
+      responses:
+        200:
+          description: Update and return renting discount with the specified id
 parameters:
   coupon_body:
     name: coupon_body
@@ -102,6 +166,7 @@ parameters:
           type: string
         UserId:
           type: string
+
   coupon_put:
     name: coupon_put
     description: Test for updating a coupon
@@ -126,12 +191,59 @@ parameters:
     required: true
     type: string
 
+  renting_discount_id:
+    name: renting_discount_id
+    description: The id of the renting discount we are looking for
+    in: path
+    required: true
+    type: integer
+
+  renting_discount_body:
+    name: renting_discount_body
+    description: Adding a renting discount
+    in: body
+    schema:
+      required:
+        - discountRank_type
+        - userId
+      properties:
+        discountRank_type:
+          type: string
+        userId:
+          type: integer
+
+  renting_discount_put:
+    name: renting_discount_put
+    description: Updating a renting discount
+    in: body
+    schema:
+      required:
+        - validFrom
+        - validUntil
+        - discountPercent
+        - discountRank_type
+        - userId
+        - code
+      properties:
+        validFrom:
+          type: string
+        validUntil:
+          type: string
+        discountPercent:
+          type: number
+        discountRank_type:
+          type: string
+        userId:
+          type: integer
+        code:
+          type: string
+
   user_id:
     name: user_id
     description: The id of the user we are looking for to find the coupon from
     in: path
     required: true
-    type: string
+    type: integer # Nikola ova go smeniv od string vo integer, oti neli po dogovor rekovme deka ke bide integer id-to na user-ot
 
   coupon_body_discount:
     name: coupon_body_discount
