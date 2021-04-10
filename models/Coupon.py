@@ -9,8 +9,8 @@ from app import db
 
 
 class UserCoupon(db.Model):
-    Id = db.Column(db.String, primary_key=True)
-    UserId = db.Column(db.String, nullable=False)
+    Id = db.Column(db.BigInteger, primary_key=True)
+    UserId = db.Column(db.BigInteger, nullable=False)
     Code = db.Column(db.String(15), nullable=False)
     ValidFrom = db.Column(db.DateTime, nullable=False)
     ValidTo = db.Column(db.DateTime, nullable=False)

@@ -161,11 +161,11 @@ parameters:
         - UserId
       properties:
         Id:
-          type: string
+          type: integer
         Type:
           type: string
         UserId:
-          type: string
+          type: integer
 
   coupon_put:
     name: coupon_put
@@ -178,7 +178,7 @@ parameters:
         - Amount
       properties:
         UserId:
-          type: string
+          type: integer
         Code:
           type: string
         Amount:
@@ -189,7 +189,7 @@ parameters:
     description: The id of the coupon we are looking for
     in: path
     required: true
-    type: string
+    type: integer
 
   renting_discount_id:
     name: renting_discount_id
