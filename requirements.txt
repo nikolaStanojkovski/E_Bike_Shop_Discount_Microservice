@@ -1,4 +1,5 @@
 Flask
 Flask-Migrate
-connexion[swagger-ui]
+connexion[swagger-ui]~=2.7.0
 sqlalchemy
+marshmallow

@@ -87,7 +87,7 @@ paths:
 
   /discount/renting/{discount_id}:
     get:
-      tags: [ RentingDiscounts ]
+      tags: [ Renting Discounts ]
       operationId: app.get_renting_discount
       summary: Find renting discount by id
       parameters:
@@ -98,7 +98,7 @@ paths:
 
   /discount/renting/:
     get:
-      tags: [ RentingDiscounts ]
+      tags: [ Renting Discounts ]
       operationId: app.get_all_renting_discounts
       summary: Get all renting discounts
       responses:
@@ -107,7 +107,7 @@ paths:
 
   /discount/renting:
     post:
-      tags: [ RentingDiscounts ]
+      tags: [ Renting Discounts ]
       operationId: app.renting_discount_add
       summary: Adding new renting discount
       parameters:
@@ -118,7 +118,7 @@ paths:
 
   /discount/renting/user/{user_id}:
     get:
-      tags: [ RentingDiscounts ]
+      tags: [ Renting Discounts ]
       operationId: app.get_renting_discount_for_user
       summary: Get discount renting by user
       parameters:
@@ -129,7 +129,7 @@ paths:
 
   /discount/renting/delete/{discount_id}:
     delete:
-      tags: [ RentingDiscounts ]
+      tags: [ Renting Discounts ]
       operationId: app.renting_discount_delete
       summary: Deleting renting discount
       parameters:
@@ -140,7 +140,7 @@ paths:
 
   /discount/renting/update/{discount_id}:
     put:
-      tags: [ RentingDiscounts ]
+      tags: [ Renting Discounts ]
       operationId: app.renting_discount_update
       summary: Update renting discount with given id
       parameters:
@@ -152,7 +152,7 @@ paths:
 
   /discount/buying/{discount_id}:
     get:
-      tags: [ BuyingDiscounts ]
+      tags: [ Buying Discounts ]
       operationId: app.get_buying_discount
       summary: Find renting discount by id
       parameters:
@@ -163,7 +163,7 @@ paths:
 
   /discount/buying/:
     get:
-      tags: [ BuyingDiscounts ]
+      tags: [ Buying Discounts ]
       operationId: app.get_all_buying_discounts
       summary: Get all buying discounts
       responses:
@@ -172,7 +172,7 @@ paths:
 
   /discount/buying:
     post:
-      tags: [ BuyingDiscounts ]
+      tags: [ Buying Discounts ]
       operationId: app.buying_discount_add
       summary: Adding new buying discount
       parameters:
@@ -183,7 +183,7 @@ paths:
 
   /discount/buying/user/{user_id}:
     get:
-      tags: [ BuyingDiscounts ]
+      tags: [ Buying Discounts ]
       operationId: app.get_buying_discount_for_user
       summary: Get buying discount by user
       parameters:
@@ -194,7 +194,7 @@ paths:
 
   /discount/buying/delete/{discount_id}:
     delete:
-      tags: [ BuyingDiscounts ]
+      tags: [ Buying Discounts ]
       operationId: app.buying_discount_delete
       summary: Deleting buying discount
       parameters:
@@ -205,7 +205,7 @@ paths:
 
   /discount/buying/update/{discount_id}:
     put:
-      tags: [ BuyingDiscounts ]
+      tags: [ Buying Discounts ]
       operationId: app.buying_discount_update
       summary: Update buying discount with given id
       parameters:
@@ -217,7 +217,7 @@ paths:
 
   /discount/parking/{discount_id}:
     get:
-      tags: [ ParkingDiscounts ]
+      tags: [ Parking Discounts ]
       operationId: app.get_parking_discount
       summary: Find parking discount by id
       parameters:
@@ -228,7 +228,7 @@ paths:
 
   /discount/parking/:
     get:
-      tags: [ ParkingDiscounts ]
+      tags: [ Parking Discounts ]
       operationId: app.get_all_parking_discounts
       summary: Get all parking discounts
       responses:
@@ -237,7 +237,7 @@ paths:
 
   /discount/parking:
     post:
-      tags: [ ParkingDiscounts ]
+      tags: [ Parking Discounts ]
       operationId: app.parking_discount_add
       summary: Adding new parking discount
       parameters:
@@ -248,7 +248,7 @@ paths:
 
   /discount/parking/user/{user_id}:
     get:
-      tags: [ ParkingDiscounts ]
+      tags: [ Parking Discounts ]
       operationId: app.get_parking_discount_for_user
       summary: Get parking discount by user
       parameters:
@@ -259,7 +259,7 @@ paths:
 
   /discount/parking/delete/{discount_id}:
     delete:
-      tags: [ ParkingDiscounts ]
+      tags: [ Parking Discounts ]
       operationId: app.parking_discount_delete
       summary: Deleting parking discount
       parameters:
@@ -270,7 +270,7 @@ paths:
 
   /discount/parking/update/{discount_id}:
     put:
-      tags: [ ParkingDiscounts ]
+      tags: [ Parking Discounts ]
       operationId: app.parking_discount_update
       summary: Update parking discount with given id
       parameters:
