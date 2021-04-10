@@ -51,16 +51,16 @@ def test_discount_calculation(coupon_body_discount):
 #####################################################################################################
 #####################################################################################################
 
-def get_renting_discount(renting_discount_id):
-    return renting_discount_service.renting_discount_read_by_id(renting_discount_id)
+def get_renting_discount(discount_id):
+    return renting_discount_service.renting_discount_read_by_id(discount_id)
 
 
 def get_all_renting_discounts():
     return renting_discount_service.renting_discount_find_all()
 
 
-def renting_discount_add(renting_discount_body):
-    return renting_discount_service.renting_discount_add(renting_discount_body)
+def renting_discount_add(discount_body):
+    return renting_discount_service.renting_discount_add(discount_body)
 
 
 def get_renting_discount_for_user(user_id):
@@ -71,12 +71,76 @@ def get_renting_discount_for_user(user_id):
         return {'error': 'Could not find renting discount for user with id {}'.format(user_id)}
 
 
-def renting_discount_delete(renting_discount_id):
-    return renting_discount_service.renting_discount_delete(renting_discount_id)
+def renting_discount_delete(discount_id):
+    return renting_discount_service.renting_discount_delete(discount_id)
 
 
-def renting_discount_update(renting_discount_id, renting_discount_put):
-    return renting_discount_service.renting_discount_update(renting_discount_id, renting_discount_put)
+def renting_discount_update(discount_id, discount_put):
+    return renting_discount_service.renting_discount_update(discount_id, discount_put)
+
+
+# BuyingDiscount CRUD
+#####################################################################################################
+#####################################################################################################
+
+def get_buying_discount(discount_id):
+    return buying_discount_service.buying_discount_read_by_id(discount_id)
+
+
+def get_all_buying_discounts():
+    return buying_discount_service.buying_discount_find_all()
+
+
+def buying_discount_add(discount_body):
+    return buying_discount_service.buying_discount_add(discount_body)
+
+
+def get_buying_discount_for_user(user_id):
+    discount = buying_discount_service.read_buying_discount_by_user(user_id)
+    if discount:
+        return discount
+    else:
+        return {'error': 'Could not find renting discount for user with id {}'.format(user_id)}
+
+
+def buying_discount_delete(discount_id):
+    return buying_discount_service.buying_discount_delete(discount_id)
+
+
+def buying_discount_update(discount_id, discount_put):
+    return buying_discount_service.buying_discount_update(discount_id, discount_put)
+
+# ParkingDiscount CRUD
+#####################################################################################################
+#####################################################################################################
+
+
+def get_parking_discount(discount_id):
+    return parking_discount_service.parking_discount_read_by_id(discount_id)
+
+
+def get_all_parking_discounts():
+    return parking_discount_service.parking_discount_find_all()
+
+
+def parking_discount_add(discount_body):
+    return parking_discount_service.parking_discount_add(discount_body)
+
+
+def get_parking_discount_for_user(user_id):
+    discount = parking_discount_service.read_parking_discount_by_user(user_id)
+    if discount:
+        return discount
+    else:
+        return {'error': 'Could not find renting discount for user with id {}'.format(user_id)}
+
+
+def parking_discount_delete(discount_id):
+    return parking_discount_service.parking_discount_delete(discount_id)
+
+
+def parking_discount_update(discount_id, discount_put):
+    return parking_discount_service.parking_discount_update(discount_id, discount_put)
 
 #####################################################################################################
 #####################################################################################################
@@ -104,12 +168,12 @@ connexion_app.add_api("api.yml")
 
 # reference of services and models
 from service.UserCouponService import UserCouponService
-from service.DiscountService import RentingDiscountService
-from models.Coupon import UserCoupon
-from models.Discount import RentingDiscount, BuyingDiscount, ParkingDiscount
+from service.DiscountService import RentingDiscountService, BuyingDiscountService, ParkingDiscountService
 
 couponService = UserCouponService()
 renting_discount_service = RentingDiscountService()
+buying_discount_service = BuyingDiscountService()
+parking_discount_service = ParkingDiscountService()
 
 if __name__ == "__main__":
     connexion_app.run(host='0.0.0.0', port=5000, debug=True)
