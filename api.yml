@@ -279,6 +279,85 @@ paths:
       responses:
         200:
           description: Update and return parking discount with the specified id
+
+  /applyDiscountOnProduct/:
+    post:
+      tags: [ Product Discount ]
+      operationId: app.applyDiscountOnProduct
+      summary: Apply discount on product
+      parameters:
+        - $ref: '#/parameters/product_body'
+      responses:
+        200:
+          description: Successfully added discount on the product
+        400:
+          description: Bad request
+
+  /product/update/{product_id}:
+    put:
+      tags: [ Product Discount ]
+      operationId: app.testUpdateProduct
+      summary: Update product
+      parameters:
+        - $ref: '#/parameters/product_id'
+        - $ref: '#/parameters/product_body'
+      responses:
+        200:
+          description: Update and return product
+        400:
+          description: Bad request
+
+  /validProductDiscounts/:
+    get:
+      tags: [ Product Discount ]
+      operationId: app.getAllValidProductDiscounts
+      summary: Get all product discounts which are valid at the moment
+      responses:
+        200:
+          description: All product discounts which are valid at the moment
+
+  /allProductDiscounts/:
+    get:
+      tags: [ Product Discount ]
+      operationId: app.getAllProductDiscounts
+      summary: Get all product discounts
+      responses:
+        200:
+          description: All product discounts
+
+  /productDiscount/{product_id}:
+    get:
+      tags: [ Product Discount ]
+      operationId: app.getProductDiscountById
+      summary: Get product discount by id
+      parameters:
+        - $ref: '#/parameters/product_id'
+      responses:
+        200:
+          description: Returned product discount by given id
+
+  /deleteProduct/{product_id}:
+    delete:
+      tags: [ Product Discount ]
+      operationId: app.deleteProduct
+      summary: Delete product discount by id
+      parameters:
+        - $ref: '#/parameters/product_id'
+      responses:
+        200:
+          description: Deleted product with given id
+
+  /isProductOnDiscount/{product_id}:
+    get:
+      tags: [ Product Discount ]
+      operationId: app.checkIfProductIsOnDiscountAtTheMoment
+      summary: Check if the product with the given id is on discount at the moment
+      parameters:
+        - $ref: '#/parameters/product_id'
+      responses:
+        200:
+          description: Check if product with given id is on discount at the moment
+
 parameters:
   coupon_body:
     name: coupon_body
@@ -385,3 +464,24 @@ parameters:
           type: string
         InitialPrice:
           type: integer
+
+  product_id:
+    name: product_id
+    description: The id of the product we are looking for
+    in: path
+    required: true
+    type: integer
+
+  product_body:
+    name: product_body
+    description: Test for adding new product
+    in: body
+    schema:
+      required:
+        - Id
+        - Type
+      properties:
+        Id:
+          type: integer
+        Type:
+          type: string

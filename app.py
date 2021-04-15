@@ -110,6 +110,7 @@ def buying_discount_delete(discount_id):
 def buying_discount_update(discount_id, discount_put):
     return buying_discount_service.buying_discount_update(discount_id, discount_put)
 
+
 # ParkingDiscount CRUD
 #####################################################################################################
 #####################################################################################################
@@ -142,6 +143,39 @@ def parking_discount_delete(discount_id):
 def parking_discount_update(discount_id, discount_put):
     return parking_discount_service.parking_discount_update(discount_id, discount_put)
 
+
+# Testing Methods
+# Product Discount CRUD
+#####################################################################################################
+#####################################################################################################
+
+
+def applyDiscountOnProduct(product_body):
+    foundProduct = product_discount_service.applyDiscountOnProduct(productBody=product_body)
+    return foundProduct
+
+
+def testUpdateProduct(product_id, product_body):
+    foundProduct = product_discount_service.updateProduct(product_id, product_body)
+    return foundProduct
+
+
+def getAllProductDiscounts():
+    return product_discount_service.getAllProductDiscounts()
+
+
+def getProductDiscountById(product_id):
+    return product_discount_service.getProductDiscountById(product_id)
+
+
+def deleteProduct(product_id):
+    return product_discount_service.deleteProduct(product_id)
+
+
+def checkIfProductIsOnDiscountAtTheMoment(product_id):
+    return product_discount_service.checkIfProductIsOnDiscountAtTheMoment(product_id)
+
+
 #####################################################################################################
 #####################################################################################################
 
@@ -157,7 +191,15 @@ def calculate_discount(user_id):
     # Product discount logic ...
 
 
+# External function to inventory
+
+
+def getAllValidProductDiscounts():
+    return product_discount_service.getAllValidProductDiscounts()
+
+
 # Configuration
+
 
 connexion_app = connexion.App(__name__, specification_dir="./")
 app = connexion_app.app
@@ -169,11 +211,13 @@ connexion_app.add_api("api.yml")
 # reference of services and models
 from service.UserCouponService import UserCouponService
 from service.DiscountService import RentingDiscountService, BuyingDiscountService, ParkingDiscountService
+from service.ProductDiscountService import ProductDiscountService
 
 couponService = UserCouponService()
 renting_discount_service = RentingDiscountService()
 buying_discount_service = BuyingDiscountService()
 parking_discount_service = ParkingDiscountService()
+product_discount_service = ProductDiscountService()
 
 if __name__ == "__main__":
     connexion_app.run(host='0.0.0.0', port=5000, debug=True)
