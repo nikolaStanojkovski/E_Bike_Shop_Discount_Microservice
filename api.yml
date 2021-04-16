@@ -358,6 +358,51 @@ paths:
         200:
           description: Check if product with given id is on discount at the moment
 
+  /applyDiscountForUserBuyingProduct/{user_id}:
+    post:
+      tags: [ Discount User Buying Product ]
+      operationId: app.applyDiscountForUserBuyingProduct
+      summary: Applies discount according to the user which buys the product
+      parameters:
+        - $ref: '#/parameters/user_id'
+        - $ref: '#/parameters/price_to_pay'
+      responses:
+        200:
+          description: Successfully added discount for the service
+        400:
+          description: Bad request
+
+  /applyDiscountForUserRentingBike/{user_id}:
+    post:
+      tags: [ Discount User Renting ]
+      operationId: app.applyDiscountForUserRentingBike
+      summary: Applies discount according to the user which rents the bike
+      parameters:
+        - $ref: '#/parameters/user_id'
+        - $ref: '#/parameters/price_to_pay'
+      responses:
+        200:
+          description: Successfully added discount for the service
+        400:
+          description: Bad request
+
+  /applyDiscountForUserPayingParking/{user_id}:
+    post:
+      tags: [ Discount User Parking ]
+      operationId: app.applyDiscountForUserPayingParking
+      summary: Applies discount to the user which pays parking
+      parameters:
+        - $ref: '#/parameters/user_id'
+        - $ref: '#/parameters/price_to_pay'
+      responses:
+        200:
+          description: Successfully added discount for the service
+        400:
+          description: Bad request
+
+        
+  
+
 parameters:
   coupon_body:
     name: coupon_body
@@ -485,3 +530,15 @@ parameters:
           type: integer
         Type:
           type: string
+
+  price_to_pay:
+    name: price_to_pay
+    description: The price to which the discount will be added
+    in: body
+    schema:
+      required:
+        - PriceToPay
+      properties:
+        PriceToPay:
+          type: number
+          format: double

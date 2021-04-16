@@ -198,6 +198,23 @@ def getAllValidProductDiscounts():
     return product_discount_service.getAllValidProductDiscounts()
 
 
+# External functions to payment
+
+def applyDiscountForUserBuyingProduct(user_id, price_to_pay):
+    buying_discount = buying_discount_service.read_buying_discount_by_user(user_id)
+    return price_to_pay["PriceToPay"] - price_to_pay["PriceToPay"] * buying_discount["discountPercent"]
+
+
+def applyDiscountForUserRentingBike(user_id, price_to_pay):
+    renting_discount = renting_discount_service.read_renting_discount_by_user(user_id)
+    return price_to_pay["PriceToPay"] - price_to_pay["PriceToPay"] * renting_discount["discountPercent"]
+
+
+def applyDiscountForUserPayingParking(user_id, price_to_pay):
+    parking_discount = parking_discount_service.read_parking_discount_by_user(user_id)
+    return price_to_pay["PriceToPay"] - price_to_pay["PriceToPay"] * parking_discount["discountPercent"]
+
+
 # Configuration
 
 
