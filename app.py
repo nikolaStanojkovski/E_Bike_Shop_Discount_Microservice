@@ -201,18 +201,33 @@ def getAllValidProductDiscounts():
 # External functions to payment
 
 def applyDiscountForUserBuyingProduct(user_id, price_to_pay):
-    buying_discount = buying_discount_service.read_buying_discount_by_user(user_id)
-    return price_to_pay["PriceToPay"] - price_to_pay["PriceToPay"] * buying_discount["discountPercent"]
+    medal_discount = buying_discount_service.calculate_discount(user_id=user_id, 
+                                                initial_price=price_to_pay['PriceToPay'])
+
+    coupon_discount = couponService.Calculate_Discount(user_id=user_id,
+                                                  initial_price=medal_discount)
+
+    return coupon_discount
 
 
 def applyDiscountForUserRentingBike(user_id, price_to_pay):
-    renting_discount = renting_discount_service.read_renting_discount_by_user(user_id)
-    return price_to_pay["PriceToPay"] - price_to_pay["PriceToPay"] * renting_discount["discountPercent"]
+    medal_discount =  renting_discount_service.calculate_discount(user_id=user_id, 
+                                                initial_price=price_to_pay['PriceToPay'])
+
+    coupon_discount = couponService.Calculate_Discount(user_id=user_id,
+                                                  initial_price=medal_discount)
+
+    return coupon_discount
 
 
 def applyDiscountForUserPayingParking(user_id, price_to_pay):
-    parking_discount = parking_discount_service.read_parking_discount_by_user(user_id)
-    return price_to_pay["PriceToPay"] - price_to_pay["PriceToPay"] * parking_discount["discountPercent"]
+    medal_discount =  parking_discount_service.calculate_discount(user_id=user_id, 
+                                                initial_price=price_to_pay['PriceToPay'])
+
+    coupon_discount = couponService.Calculate_Discount(user_id=user_id,
+                                                  initial_price=medal_discount)
+
+    return coupon_discount
 
 
 # Configuration
