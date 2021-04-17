@@ -176,22 +176,14 @@ def checkIfProductIsOnDiscountAtTheMoment(product_id):
     return product_discount_service.checkIfProductIsOnDiscountAtTheMoment(product_id)
 
 
+# External functions
 #####################################################################################################
 #####################################################################################################
-
-
-def calculate_discount(user_id):
-    totalDiscount = 0  # Initial discount
-
-    # General discount logic ...
-
-    # Coupon discount logic ...
-    totalDiscount = couponService.Calculate_Discount(user_id=user_id, initial_price=totalDiscount)
-
-    # Product discount logic ...
+#####################################################################################################
 
 
 # External function to inventory
+#####################################################################################################
 
 
 def getAllValidProductDiscounts():
@@ -199,6 +191,7 @@ def getAllValidProductDiscounts():
 
 
 # External functions to payment
+#####################################################################################################
 
 def applyDiscountForUserBuyingProduct(user_id, price_to_pay):
     medal_discount = buying_discount_service.calculate_discount(user_id=user_id, 
@@ -211,7 +204,7 @@ def applyDiscountForUserBuyingProduct(user_id, price_to_pay):
 
 
 def applyDiscountForUserRentingBike(user_id, price_to_pay):
-    medal_discount =  renting_discount_service.calculate_discount(user_id=user_id, 
+    medal_discount = renting_discount_service.calculate_discount(user_id=user_id,
                                                 initial_price=price_to_pay['PriceToPay'])
 
     coupon_discount = couponService.Calculate_Discount(user_id=user_id,
@@ -221,7 +214,7 @@ def applyDiscountForUserRentingBike(user_id, price_to_pay):
 
 
 def applyDiscountForUserPayingParking(user_id, price_to_pay):
-    medal_discount =  parking_discount_service.calculate_discount(user_id=user_id, 
+    medal_discount = parking_discount_service.calculate_discount(user_id=user_id,
                                                 initial_price=price_to_pay['PriceToPay'])
 
     coupon_discount = couponService.Calculate_Discount(user_id=user_id,

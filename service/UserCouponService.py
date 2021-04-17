@@ -84,4 +84,4 @@ class UserCouponService:
             price_to_discount = found_coupon.Amount * 0.01 * initial_price
             return initial_price - price_to_discount
         else:
-            return {'error': 'Could not find coupon for user with id {}'.format(user_id)}
+            return initial_price
