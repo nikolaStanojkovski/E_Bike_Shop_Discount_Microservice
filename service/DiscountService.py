@@ -73,8 +73,11 @@ class ParkingDiscountService:
         return result
 
     def calculate_discount(self, user_id, initial_price):
-        discount_percent = self.read_parking_discount_by_user(user_id)["discountPercent"]
-        return initial_price - initial_price * discount_percent
+        if self.read_parking_discount_by_user(user_id):
+            discount_percent = self.read_parking_discount_by_user(user_id)["discountPercent"]
+            return initial_price - initial_price * discount_percent
+        else:
+            return initial_price
 
 
 class BuyingDiscountService:
@@ -145,8 +148,11 @@ class BuyingDiscountService:
         return result
 
     def calculate_discount(self, user_id, initial_price):
-        discount_percent = self.read_buying_discount_by_user(user_id)["discountPercent"]
-        return initial_price - initial_price * discount_percent
+        if self.read_buying_discount_by_user(user_id):
+            discount_percent = self.read_buying_discount_by_user(user_id)["discountPercent"]
+            return initial_price - initial_price * discount_percent
+        else:
+            return initial_price
 
 
 
@@ -218,6 +224,8 @@ class RentingDiscountService:
         return result
 
     def calculate_discount(self, user_id, initial_price):
-        discount_percent = self.read_renting_discount_by_user(user_id)["discountPercent"]
-        return initial_price - initial_price * discount_percent
-
+        if self.read_renting_discount_by_user(user_id):
+            discount_percent = self.read_renting_discount_by_user(user_id)["discountPercent"]
+            return initial_price - initial_price * discount_percent
+        else:
+            return initial_price
