@@ -51,7 +51,7 @@ class ProductDiscountService:
         products = self.productDiscountRepository.getAllValidProductDiscounts()
         for_return = []
         for product in products:
-            for_return.append(self.productDiscountRepository.getProductById(product.Id))
+            for_return.append(self.productDiscountRepository.getEssentialInformationForProductById(product.Id))
 
         return for_return
 

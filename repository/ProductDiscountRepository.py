@@ -2,6 +2,37 @@ from datetime import datetime, timedelta
 
 from app import db
 from models.Product import Product
+from marshmallow import Schema, fields
+
+
+class ProductDiscountSchema(Schema):
+    Id = fields.Number()
+    TimesBought = fields.Number()
+    ValidFrom = fields.DateTime()
+    ValidTo = fields.DateTime()
+    Type = fields.Str()
+    DiscountPercentage = fields.Number()
+
+
+
+schema = ProductDiscountSchema()
+
+
+def result_prettifier(productDiscount):
+    result = dict(Id=productDiscount.Id,
+                  TimesBought=productDiscount.TimesBought,
+                  ValidFrom=productDiscount.ValidFrom,
+                  ValidTo=productDiscount.ValidTo,
+                  Type=productDiscount.Type,
+                  DiscountPercentage=productDiscount.DiscountPercentage)
+    return schema.dump(result)
+
+
+def simple_result_prettifier(productDiscount):
+    result = dict(Id=productDiscount.Id,
+                  ValidTo=productDiscount.ValidTo,
+                  DiscountPercentage=productDiscount.DiscountPercentage)
+    return schema.dump(result)
 
 
 class ProductDiscountRepository:
@@ -21,11 +52,16 @@ class ProductDiscountRepository:
         foundProduct = db.session.query(Product).filter_by(Id=productId).first()
 
         if foundProduct:
-            ValidFromString = foundProduct.ValidFrom.strftime("%m/%d/%Y")
-            ValidToString = foundProduct.ValidTo.strftime("%m/%d/%Y")
-            return {'Id': foundProduct.Id, 'TimesBought': foundProduct.TimesBought,
-                    'ValidFrom': ValidFromString, 'ValidTo': ValidToString,
-                    'Type': foundProduct.Type, 'DiscountPercentage': foundProduct.DiscountPercentage}
+            return result_prettifier(foundProduct)
+        else:
+            return {'error': 'Product with id {} not found'.format(productId)}, 404
+
+
+    def getEssentialInformationForProductById(self,productId):
+        foundProduct = db.session.query(Product).filter_by(Id=productId).first()
+
+        if foundProduct:
+            return simple_result_prettifier(foundProduct)
         else:
             return {'error': 'Product with id {} not found'.format(productId)}, 404
 
