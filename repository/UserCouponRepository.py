@@ -1,7 +1,36 @@
 from app import db
 from models.Coupon import UserCoupon
 from datetime import datetime
+from marshmallow import Schema, fields
 
+
+# Marshmallow configuration
+##########################
+##########################
+
+class UserCouponSchema(Schema):
+    Id = fields.Number()
+    UserId = fields.Number()
+    Code = fields.Str()
+    ValidFrom = fields.DateTime()
+    ValidTo = fields.DateTime()
+    Type = fields.Number()
+    Amount = fields.Number()
+
+
+schema = UserCouponSchema()
+
+
+def result_prettifier(coupon):
+    result = dict(Id=coupon.Id, UserId=coupon.UserId, Code=coupon.Code,
+                  ValidFrom=coupon.ValidFrom, ValidTo=coupon.ValidTo,
+                  Type=coupon.Type, Amount=coupon.Amount)
+    return schema.dump(result)
+
+
+# Repository implementation
+##########################
+##########################
 
 class UserCouponRepository:
 
@@ -18,11 +47,7 @@ class UserCouponRepository:
     def Coupon_Read(self, coupon_id):
         found_coupon = db.session.query(UserCoupon).filter_by(Id=coupon_id).first()
         if found_coupon:
-            ValidFromString = found_coupon.ValidFrom.strftime("%m/%d/%Y")
-            ValidToString = found_coupon.ValidTo.strftime("%m/%d/%Y")
-            return {'Id': found_coupon.Id, 'UserId': found_coupon.UserId, 'Code': found_coupon.Code,
-                    'ValidFrom': ValidFromString, 'ValidTo': ValidToString,
-                    'Type': found_coupon.Type, 'Amount': found_coupon.Amount}
+            return result_prettifier(found_coupon)
         else:
             return {'error': 'Coupon with id {} not found'.format(coupon_id)}, 404
 
@@ -51,14 +76,12 @@ class UserCouponRepository:
         else:
             return {'error': 'Coupon with id {} not found'.format(coupon_id)}, 404
 
-
     def Coupon_Delete(self, coupon_id):
         found_coupon = self.Coupon_Read_Check(coupon_id)
 
         if found_coupon:
             db.session.delete(found_coupon)
             db.session.commit()
-
 
     def Coupon_Read_User(self, user_id):
         found_coupon = db.session.query(UserCoupon).filter_by(UserId=user_id).first()

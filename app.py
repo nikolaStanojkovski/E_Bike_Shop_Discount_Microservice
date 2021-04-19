@@ -237,6 +237,7 @@ connexion_app.add_api("api.yml")
 from service.UserCouponService import UserCouponService
 from service.DiscountService import RentingDiscountService, BuyingDiscountService, ParkingDiscountService
 from service.ProductDiscountService import ProductDiscountService
+from models.Roles import Role
 
 couponService = UserCouponService()
 renting_discount_service = RentingDiscountService()

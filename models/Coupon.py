@@ -2,12 +2,6 @@ from enum import Enum
 from app import db
 
 
-# class CouponType(Enum):
-#     LEVEL_1 = 1
-#     LEVEL_2 = 2
-#     LEVEL_3 = 3
-
-
 class UserCoupon(db.Model):
     Id = db.Column(db.BigInteger, primary_key=True)
     UserId = db.Column(db.BigInteger, nullable=False)
