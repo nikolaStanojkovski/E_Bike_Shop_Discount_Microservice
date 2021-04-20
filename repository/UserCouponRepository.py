@@ -14,7 +14,7 @@ class UserCouponSchema(Schema):
     Code = fields.Str()
     ValidFrom = fields.DateTime()
     ValidTo = fields.DateTime()
-    Type = fields.Number()
+    Type = fields.Str()
     Amount = fields.Number()
 
 
@@ -65,10 +65,9 @@ class UserCouponRepository:
         found_coupon = self.Coupon_Read_Check(coupon_id)
 
         if found_coupon:
-            found_coupon.UserId = coupon_body['UserId']
             found_coupon.Code = coupon_body['Code']
             found_coupon.Amount = coupon_body['Amount']
-            found_coupon.Type = '4'
+            found_coupon.Type = 'CUSTOM LEVEL'
 
             db.session.commit()
 

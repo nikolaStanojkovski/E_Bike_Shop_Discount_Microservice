@@ -8,22 +8,22 @@ from flask_sqlalchemy import SQLAlchemy
 #####################################################################################################
 #####################################################################################################
 
-def test_get_coupon(coupon_id):
+def getCoupon(coupon_id):
     found_coupon = couponService.Read_Coupon(coupon_id=coupon_id)
     return found_coupon
 
 
-def test_get_all_coupons():
+def getAllCoupons():
     found_coupons = couponService.Read_All_Coupons()
     return found_coupons
 
 
-def test_add_coupon(coupon_body):
-    found_coupon = couponService.Add_Coupon(coupon_body=coupon_body, user_id=coupon_body['UserId'])
+def addNewCoupon(coupon_body):
+    found_coupon = couponService.Add_Coupon(coupon_body=coupon_body, user_id=coupon_body['userId'])
     return found_coupon
 
 
-def test_get_coupon_for_user(user_id):
+def getCouponForUser(user_id):
     found_coupon = couponService.Read_Coupon_By_User(user_id=user_id)
     if found_coupon:
         return found_coupon
@@ -31,16 +31,16 @@ def test_get_coupon_for_user(user_id):
         return {'error': 'Could not find coupon for user with id {}'.format(user_id)}
 
 
-def test_delete_coupon(coupon_id):
+def deleteCoupon(coupon_id):
     couponService.Delete_Coupon(coupon_id=coupon_id)
 
 
-def test_update_coupon(coupon_id, coupon_put):
+def updateCoupon(coupon_id, coupon_put):
     found_coupon = couponService.Update_Coupon(coupon_id, coupon_put)
     return found_coupon
 
 
-def test_discount_calculation(coupon_body_discount):
+def discountCalculation(coupon_body_discount):
     totalPrice = couponService.Calculate_Discount(user_id=coupon_body_discount["UserId"],
                                                   initial_price=coupon_body_discount["InitialPrice"])
     return {'price_after_discount': totalPrice}

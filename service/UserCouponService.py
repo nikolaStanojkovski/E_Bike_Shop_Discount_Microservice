@@ -19,31 +19,31 @@ class UserCouponService:
         if user_coupon:
             return {'error': 'User with id {} already has a coupon'.format(user_id)}
 
-        found_coupon = self.coupon_repository.Coupon_Read_Check(coupon_body['Id'])
+        found_coupon = self.coupon_repository.Coupon_Read_Check(coupon_body['id'])
         if found_coupon:
-            return {'error': 'There is already a coupon with id {}'.format(coupon_body['Id'])}
+            return {'error': 'There is already a coupon with id {}'.format(coupon_body['id'])}
 
         letters = string.ascii_lowercase
         generated_code = ''.join(random.choice(letters) for i in range(15))  # Generating random string
 
-        type = coupon_body['Type']
+        type = coupon_body['type']
         amount = 0
         ValidFrom = datetime.now()
         ValidTo = datetime.now()
 
-        if type == '1':
+        if type == 'LEVEL 1':
             amount = 5
             ValidTo = ValidFrom + timedelta(days=30)
-        elif type == '2':
+        elif type == 'LEVEL 2':
             amount = 12
             ValidTo = ValidFrom + timedelta(days=50)
-        elif type == '3':
+        elif type == 'LEVEL 3':
             amount = 25
             ValidTo = ValidFrom + timedelta(days=100)
 
         # Generating the percentage depending on the coupon type
 
-        new_coupon = UserCoupon(Id=coupon_body['Id'],
+        new_coupon = UserCoupon(Id=coupon_body['id'],
                                 UserId=user_id,
                                 Code=generated_code,
                                 ValidFrom=ValidFrom,
