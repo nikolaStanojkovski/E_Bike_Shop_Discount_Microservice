@@ -42,6 +42,11 @@ class ProductDiscountService:
 
         return self.productDiscountRepository.applyDiscountOnProduct(newProduct=newProduct)
 
+    def postInformationFor5MostBoughtProducts(self, productIds):
+        return self.productDiscountRepository.postInformationFor5MostBoughtProducts(productIds)
+
+    def postInformationFor5LeastBoughtProducts(self, productIds):
+        return self.productDiscountRepository.postInformationFor5LeastBoughtProducts(productIds)
 
     def updateProduct(self, productId, productBody):
         return self.productDiscountRepository.updateProductDiscount(productId=productId, productBody=productBody)

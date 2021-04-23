@@ -73,6 +73,50 @@ class ProductDiscountRepository:
         else:
             return {}
 
+    def postInformationFor5MostBoughtProducts(self, productIds):
+        for pId in productIds:
+            foundProduct = self.checkIfProductIsInDatabase(pId)
+            if foundProduct:
+                foundProduct.Type = "mostBought"
+                foundProduct.ValidFrom = datetime.now()
+                foundProduct.ValidTo = datetime.now() + timedelta(days=30)
+                foundProduct.TimesBought = 0
+                foundProduct.DiscountPercentage = 10
+                db.session.commit()
+            else:
+                newProduct = Product()
+                newProduct.Id = pId
+                newProduct.TimesBought = 0
+                newProduct.ValidFrom = datetime.now()
+                newProduct.ValidTo = datetime.now() + timedelta(days=30)
+                newProduct.Type = "mostBought"
+                newProduct.DiscountPercentage = 10
+                db.session.add(newProduct)
+                db.session.commit()
+        return {'success': 'The products with the given ids were successfully added to the database'}, 200
+
+    def postInformationFor5LeastBoughtProducts(self, productIds):
+        for pId in productIds:
+            foundProduct = self.checkIfProductIsInDatabase(pId)
+            if foundProduct:
+                foundProduct.Type = "leastBought"
+                foundProduct.ValidFrom = datetime.now()
+                foundProduct.ValidTo = datetime.now() + timedelta(days=30)
+                foundProduct.TimesBought = 0
+                foundProduct.DiscountPercentage = 20
+                db.session.commit()
+            else:
+                newProduct = Product()
+                newProduct.Id = pId
+                newProduct.TimesBought = 0
+                newProduct.ValidFrom = datetime.now()
+                newProduct.ValidTo = datetime.now() + timedelta(days=30)
+                newProduct.Type = "leastBought"
+                newProduct.DiscountPercentage = 20
+                db.session.add(newProduct)
+                db.session.commit()
+        return {'success': 'The products with the given ids were successfully added to the database'}, 200
+
 
     def updateProductDiscount(self, productId, productBody):
         if productId != productBody['Id']:

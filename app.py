@@ -190,6 +190,15 @@ def getAllValidProductDiscounts():
     return product_discount_service.getAllValidProductDiscounts()
 
 
+# External function to inventory
+#####################################################################################################
+
+def postInformationFor5MostBoughtProducts(product_ids):
+    return product_discount_service.postInformationFor5MostBoughtProducts(product_ids)
+
+
+def postInformationFor5LeastBoughtProducts(product_ids):
+    return product_discount_service.postInformationFor5LeastBoughtProducts(product_ids)
 # External functions to payment
 #####################################################################################################
 

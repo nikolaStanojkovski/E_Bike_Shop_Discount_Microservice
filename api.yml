@@ -358,6 +358,28 @@ paths:
         200:
           description: Check if product with given id is on discount at the moment
 
+  /postInformationFor5MostBoughtProducts:
+    post:
+      tags: [ Product Discount ]
+      operationId: app.postInformationFor5MostBoughtProducts
+      summary: Post information for 5 most bought products
+      parameters:
+        - $ref: '#/parameters/product_ids'
+      responses:
+        200:
+          description: Posted information for 5 most bought products
+
+  /postInformationFor5LeastBoughtProducts:
+    post:
+      tags: [ Product Discount ]
+      operationId: app.postInformationFor5LeastBoughtProducts
+      summary: Post information for 5 least bought products
+      parameters:
+        - $ref: '#/parameters/product_ids'
+      responses:
+        200:
+          description: Posted information for 5 least bought products
+
   /applyDiscountForUserBuyingProduct/{user_id}:
     post:
       tags: [ Discount User Buying Product ]
@@ -513,6 +535,16 @@ parameters:
     in: path
     required: true
     type: integer
+
+  product_ids:
+    name: product_ids
+    description: The ids of products
+    in: body
+    required: true
+    schema:
+      type: array
+      items:
+        type: integer
 
   product_body:
     name: product_body
