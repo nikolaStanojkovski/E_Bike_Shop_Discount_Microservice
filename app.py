@@ -18,11 +18,6 @@ def getAllCoupons():
     return found_coupons
 
 
-def addNewCoupon(coupon_body):
-    found_coupon = couponService.Add_Coupon(coupon_body=coupon_body, user_id=coupon_body['userId'])
-    return found_coupon
-
-
 def getCouponForUser(user_id):
     found_coupon = couponService.Read_Coupon_By_User(user_id=user_id)
     if found_coupon:
@@ -180,17 +175,24 @@ def checkIfProductIsOnDiscountAtTheMoment(product_id):
 #####################################################################################################
 #####################################################################################################
 #####################################################################################################
-
-
-# External function to inventory
+#####################################################################################################
 #####################################################################################################
 
 
-def getAllValidProductDiscounts():
-    return product_discount_service.getAllValidProductDiscounts()
+# Information gathering
+#####################################################################################################
+#####################################################################################################
 
 
-# External function to inventory
+# Invoices
+#####################################################################################################
+
+def addNewCoupon(coupon_body):
+    found_coupon = couponService.Add_Coupon(coupon_body=coupon_body, user_id=coupon_body['userId'])
+    return found_coupon
+
+
+# Statistics
 #####################################################################################################
 
 def postInformationFor5MostBoughtProducts(product_ids):
@@ -199,35 +201,54 @@ def postInformationFor5MostBoughtProducts(product_ids):
 
 def postInformationFor5LeastBoughtProducts(product_ids):
     return product_discount_service.postInformationFor5LeastBoughtProducts(product_ids)
-# External functions to payment
+
+
+# TODO: postUserRank(body: userId, userRank)
+
+
+# Information sending
+#####################################################################################################
 #####################################################################################################
 
+
+# Inventory
+#####################################################################################################
+
+
+def getAllValidProductDiscounts():
+    return product_discount_service.getAllValidProductDiscounts()
+
+
+# Payment
+#####################################################################################################
+
+
 def applyDiscountForUserBuyingProduct(user_id, price_to_pay):
-    medal_discount = buying_discount_service.calculate_discount(user_id=user_id, 
-                                                initial_price=price_to_pay['PriceToPay'])
+    medal_discount = buying_discount_service.calculate_discount(user_id=user_id,
+                                                                initial_price=price_to_pay['PriceToPay'])
 
     coupon_discount = couponService.Calculate_Discount(user_id=user_id,
-                                                  initial_price=medal_discount)
+                                                       initial_price=medal_discount)
 
     return coupon_discount
 
 
 def applyDiscountForUserRentingBike(user_id, price_to_pay):
     medal_discount = renting_discount_service.calculate_discount(user_id=user_id,
-                                                initial_price=price_to_pay['PriceToPay'])
+                                                                 initial_price=price_to_pay['PriceToPay'])
 
     coupon_discount = couponService.Calculate_Discount(user_id=user_id,
-                                                  initial_price=medal_discount)
+                                                       initial_price=medal_discount)
 
     return coupon_discount
 
 
 def applyDiscountForUserPayingParking(user_id, price_to_pay):
     medal_discount = parking_discount_service.calculate_discount(user_id=user_id,
-                                                initial_price=price_to_pay['PriceToPay'])
+                                                                 initial_price=price_to_pay['PriceToPay'])
 
     coupon_discount = couponService.Calculate_Discount(user_id=user_id,
-                                                  initial_price=medal_discount)
+                                                       initial_price=medal_discount)
 
     return coupon_discount
 
