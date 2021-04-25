@@ -1,6 +1,9 @@
 import connexion
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
+from functools import wraps
+from flask import request, abort
+import jwt
 
 
 # Testing Methods
@@ -184,9 +187,38 @@ def checkIfProductIsOnDiscountAtTheMoment(product_id):
 #####################################################################################################
 
 
+# Authorization 
+#####################################################################################################
+def has_role(arg):
+    def has_role_inner(fn):
+        @wraps(fn)
+        def decorated_view(*args, **kwargs):
+            try:
+                headers = request.headers
+                if 'AUTHORIZATION' in headers:
+                    token = headers['AUTHORIZATION'].split(' ')[1]
+                    decoded_token = decode_token(token)
+                    if 'admin' in decoded_token['roles']:
+                        return fn(*args, **kwargs)
+                    for role in arg:
+                        if role in decoded_token['roles']:
+                            return fn(*args, **kwargs)
+                    abort(401)
+                return fn(*args, **kwargs)
+            except Exception as e:
+                abort(401)
+        return decorated_view
+    return has_role_inner
+
+
+def decode_token(token):
+    return jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
+
+
 # Invoices
 #####################################################################################################
 
+@has_role('invoices')
 def addNewCoupon(coupon_body):
     found_coupon = couponService.Add_Coupon(coupon_body=coupon_body, user_id=coupon_body['userId'])
     return found_coupon
@@ -195,10 +227,11 @@ def addNewCoupon(coupon_body):
 # Statistics
 #####################################################################################################
 
+@has_role('statistics')
 def postInformationFor5MostBoughtProducts(product_ids):
     return product_discount_service.postInformationFor5MostBoughtProducts(product_ids)
 
-
+@has_role('statistics')
 def postInformationFor5LeastBoughtProducts(product_ids):
     return product_discount_service.postInformationFor5LeastBoughtProducts(product_ids)
 
@@ -214,7 +247,7 @@ def postInformationFor5LeastBoughtProducts(product_ids):
 # Inventory
 #####################################################################################################
 
-
+@has_role('inventory')
 def getAllValidProductDiscounts():
     return product_discount_service.getAllValidProductDiscounts()
 
@@ -222,7 +255,7 @@ def getAllValidProductDiscounts():
 # Payment
 #####################################################################################################
 
-
+@has_role('payment')
 def applyDiscountForUserBuyingProduct(user_id, price_to_pay):
     medal_discount = buying_discount_service.calculate_discount(user_id=user_id,
                                                                 initial_price=price_to_pay['PriceToPay'])
@@ -232,7 +265,7 @@ def applyDiscountForUserBuyingProduct(user_id, price_to_pay):
 
     return coupon_discount
 
-
+@has_role('payment')
 def applyDiscountForUserRentingBike(user_id, price_to_pay):
     medal_discount = renting_discount_service.calculate_discount(user_id=user_id,
                                                                  initial_price=price_to_pay['PriceToPay'])
@@ -242,7 +275,7 @@ def applyDiscountForUserRentingBike(user_id, price_to_pay):
 
     return coupon_discount
 
-
+@has_role('payment')
 def applyDiscountForUserPayingParking(user_id, price_to_pay):
     medal_discount = parking_discount_service.calculate_discount(user_id=user_id,
                                                                  initial_price=price_to_pay['PriceToPay'])

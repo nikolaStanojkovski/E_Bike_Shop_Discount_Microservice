@@ -8,6 +8,13 @@ consumes:
 produces:
   - application/json
 basePath: "/api"
+securityDefinitions:
+  jwt:
+    type: apiKey
+    name: Authorization
+    in: header
+    x-authentication-scheme: Bearer
+    x-bearerInfoFunc: app.decode_token
 paths:
   /coupons/:
     get:
@@ -42,6 +49,8 @@ paths:
 
   /coupon/create/:
     post:
+      security:
+        - jwt: [ 'secret' ]
       tags: [ User Coupon ]
       operationId: app.addNewCoupon
       summary: Testing adding a coupon
@@ -309,6 +318,8 @@ paths:
 
   /validProductDiscounts/:
     get:
+      security:
+        - jwt: [ 'secret' ]
       tags: [ Product Discount ]
       operationId: app.getAllValidProductDiscounts
       summary: Get all product discounts which are valid at the moment
@@ -360,6 +371,8 @@ paths:
 
   /postInformationFor5MostBoughtProducts:
     post:
+      security:
+        - jwt: [ 'secret' ]
       tags: [ Product Discount ]
       operationId: app.postInformationFor5MostBoughtProducts
       summary: Post information for 5 most bought products
@@ -371,6 +384,8 @@ paths:
 
   /postInformationFor5LeastBoughtProducts:
     post:
+      security:
+        - jwt: [ 'secret' ] 
       tags: [ Product Discount ]
       operationId: app.postInformationFor5LeastBoughtProducts
       summary: Post information for 5 least bought products
@@ -382,6 +397,8 @@ paths:
 
   /applyDiscountForUserBuyingProduct/{user_id}:
     post:
+      security:
+        - jwt: [ 'secret' ]
       tags: [ Discount User Buying Product ]
       operationId: app.applyDiscountForUserBuyingProduct
       summary: Applies discount according to the user which buys the product
@@ -396,6 +413,8 @@ paths:
 
   /applyDiscountForUserRentingBike/{user_id}:
     post:
+      security:
+        - jwt: [ 'secret' ]
       tags: [ Discount User Renting ]
       operationId: app.applyDiscountForUserRentingBike
       summary: Applies discount according to the user which rents the bike
@@ -410,6 +429,8 @@ paths:
 
   /applyDiscountForUserPayingParking/{user_id}:
     post:
+      security:
+        - jwt: [ 'secret' ]
       tags: [ Discount User Parking ]
       operationId: app.applyDiscountForUserPayingParking
       summary: Applies discount to the user which pays parking
