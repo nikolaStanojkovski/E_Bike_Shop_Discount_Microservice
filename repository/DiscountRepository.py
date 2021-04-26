@@ -60,6 +60,9 @@ class BuyingDiscountRepository:
         discount = db.session.query(BuyingDiscount).filter_by(userId=user_id).first()
         if discount:
             discount.discountRank_type = user_rank['discountRank_type']
+            discount.validFrom = user_rank['validFrom']
+            discount.validUntil = user_rank['validUntil']
+            discount.discountPercent = user_rank['discountPercent']
 
             db.session.commit()
             updated_discount = db.session.query(BuyingDiscount).filter_by(userId=user_id).first()
@@ -135,7 +138,11 @@ class ParkingDiscountRepository:
     def update_user_medal(self, user_id, user_rank):
         discount = db.session.query(ParkingDiscount).filter_by(userId=user_id).first()
         if discount:
+
             discount.discountRank_type = user_rank['discountRank_type']
+            discount.validFrom = user_rank['validFrom']
+            discount.validUntil = user_rank['validUntil']
+            discount.discountPercent = user_rank['discountPercent']
 
             db.session.commit()
             updated_discount = db.session.query(ParkingDiscount).filter_by(userId=user_id).first()
@@ -214,6 +221,9 @@ class RentingDiscountRepository:
         discount = db.session.query(RentingDiscount).filter_by(userId=user_id).first()
         if discount:
             discount.discountRank_type = user_rank['discountRank_type']
+            discount.validFrom = user_rank['validFrom']
+            discount.validUntil = user_rank['validUntil']
+            discount.discountPercent = user_rank['discountPercent']
 
             db.session.commit()
             updated_discount = db.session.query(RentingDiscount).filter_by(userId=user_id).first()

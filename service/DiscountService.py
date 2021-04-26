@@ -18,6 +18,27 @@ class ParkingDiscountService:
             return {}
 
     def add_medal_to_user(self, user_id, user_rank_body):
+        valid_from = datetime.now()
+        valid_until = datetime.now()
+        percent = 0
+        if user_rank_body['discountRank_type'] == "BronzeParkingMedal":
+            percent = 0.1
+            valid_until = valid_until + timedelta(weeks=1)
+        elif user_rank_body['discountRank_type'] == "SilverParkingMedal":
+            percent = 0.2
+            valid_until = valid_until + timedelta(weeks=2)
+        elif user_rank_body['discountRank_type'] == "GoldParkingMedal":
+            valid_until = valid_until + timedelta(weeks=3)
+            percent = 0.3
+        elif user_rank_body['discountRank_type'] == "Top10Monthly":
+            percent = 0.4
+            valid_until = valid_until + timedelta(weeks=8)
+        elif user_rank_body['discountRank_type'] == "Top3Annually":
+            percent = 0.5
+            valid_until = valid_until + timedelta(days=133)
+        user_rank_body['discountPercent'] = percent
+        user_rank_body['validFrom'] = valid_from
+        user_rank_body['validUntil'] = valid_until
         return self.parking_discount_repository.update_user_medal(user_id, user_rank_body)
 
     def parking_discount_add(self, parking_discount_body):
@@ -96,6 +117,28 @@ class BuyingDiscountService:
             return {}
 
     def add_medal_to_user(self, user_id, user_rank_body):
+        valid_from = datetime.now()
+        valid_until = datetime.now()
+        percent = 0
+        if user_rank_body['discountRank_type'] == "BronzeBuyingMedal":
+            percent = 0.1
+            valid_until = valid_until + timedelta(weeks=1)
+        elif user_rank_body['discountRank_type'] == "SilverBuyingMedal":
+            percent = 0.2
+            valid_until = valid_until + timedelta(weeks=2)
+        elif user_rank_body['discountRank_type'] == "GoldBuyingMedal":
+            valid_until = valid_until + timedelta(weeks=3)
+            percent = 0.3
+        elif user_rank_body['discountRank_type'] == "Top10Monthly":
+            percent = 0.4
+            valid_until = valid_until + timedelta(weeks=8)
+        elif user_rank_body['discountRank_type'] == "Top3Annually":
+            percent = 0.5
+            valid_until = valid_until + timedelta(days=133)
+
+        user_rank_body['discountPercent'] = percent
+        user_rank_body['validFrom'] = valid_from
+        user_rank_body['validUntil'] = valid_until
         return self.buying_discount_repository.update_user_medal(user_id, user_rank_body)
 
     def buying_discount_add(self, buying_discount_body):
@@ -174,6 +217,30 @@ class RentingDiscountService:
             return {}
 
     def add_medal_to_user(self, user_id, user_rank_body):
+        valid_from = datetime.now()
+        valid_until = datetime.now()
+        percent = 0.0
+
+        if user_rank_body['discountRank_type'] == "BronzeRentingMedal":
+            percent = 0.1
+            valid_until = valid_until + timedelta(days=30)
+        elif user_rank_body['discountRank_type'] == "SilverRentingMedal":
+            percent = 0.2
+            valid_until = valid_until + timedelta(days=60)
+        elif user_rank_body['discountRank_type'] == "GoldRentingMedal":
+            valid_until = valid_until + timedelta(days=90)
+            percent = 0.3
+        elif user_rank_body['discountRank_type'] == "Top10Monthly":
+            percent = 0.4
+            valid_until = valid_until + timedelta(days=30)
+        elif user_rank_body['discountRank_type'] == "Top3Annually":
+            percent = 0.5
+            valid_until = valid_until + timedelta(days=60)
+
+        user_rank_body['discountPercent'] = percent
+        user_rank_body['validFrom'] = valid_from
+        user_rank_body['validUntil'] = valid_until
+
         return self.renting_discount_repository.update_user_medal(user_id, user_rank_body)
 
     def renting_discount_add(self, renting_discount_body):

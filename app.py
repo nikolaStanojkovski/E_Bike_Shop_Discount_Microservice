@@ -236,37 +236,59 @@ def postInformationFor5LeastBoughtProducts(product_ids):
     return product_discount_service.postInformationFor5LeastBoughtProducts(product_ids)
 
 
-@has_role('statistics')
+# @has_role('statistics')
 def postUserRank(user_id, user_rank):
     medal = user_rank['discountRank_type']
     splitted = re.sub('([A-Z][a-z]+)', r' \1', re.sub('([A-Z]+)', r' \1', medal)).split()
 
+    request_body = {
+        'userId': user_id,
+        'discountRank_type': medal
+    }
+
     if splitted[1] == 'Parking':
-        return parking_discount_service.add_medal_to_user(user_id, user_rank)
+        discount = parking_discount_service.read_parking_discount_by_user(user_id)
+        if discount:
+            return parking_discount_service.add_medal_to_user(user_id, user_rank)
+        else:
+            return parking_discount_service.parking_discount_add(request_body)
+
     elif splitted[1] == 'Renting':
-        return renting_discount_service.add_medal_to_user(user_id, user_rank)
+        discount = renting_discount_service.read_renting_discount_by_user(user_id)
+        if discount:
+            return renting_discount_service.add_medal_to_user(user_id, user_rank)
+        else:
+            return renting_discount_service.renting_discount_add(request_body)
+
     elif splitted[1] == 'Buying':
-        return buying_discount_service.add_medal_to_user(user_id, user_rank)
+        discount = buying_discount_service.read_buying_discount_by_user(user_id)
+        if discount:
+            return buying_discount_service.add_medal_to_user(user_id, user_rank)
+        else:
+            return buying_discount_service.buying_discount_add(request_body)
+
     elif medal == 'Top10Monthly':
         result = parking_discount_service.read_parking_discount_by_user(user_id)
         if result:
-            return parking_discount_service.add_medal_to_user(user_id, user_rank)
+            parking_discount_service.add_medal_to_user(user_id, user_rank)
         result = renting_discount_service.read_renting_discount_by_user(user_id)
         if result:
-            return renting_discount_service.add_medal_to_user(user_id, user_rank)
+            renting_discount_service.add_medal_to_user(user_id, user_rank)
         result = buying_discount_service.read_buying_discount_by_user(user_id)
         if result:
-            return buying_discount_service.add_medal_to_user(user_id, user_rank)
+            buying_discount_service.add_medal_to_user(user_id, user_rank)
+        return 200
     elif medal == 'Top3Annually':
         result = parking_discount_service.read_parking_discount_by_user(user_id)
         if result:
-            return parking_discount_service.add_medal_to_user(user_id, user_rank)
+            parking_discount_service.add_medal_to_user(user_id, user_rank)
         result = renting_discount_service.read_renting_discount_by_user(user_id)
         if result:
-            return renting_discount_service.add_medal_to_user(user_id, user_rank)
+            renting_discount_service.add_medal_to_user(user_id, user_rank)
         result = buying_discount_service.read_buying_discount_by_user(user_id)
         if result:
-            return buying_discount_service.add_medal_to_user(user_id, user_rank)
+            buying_discount_service.add_medal_to_user(user_id, user_rank)
+        return 200
 
 # Information sending
 #####################################################################################################
