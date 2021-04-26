@@ -6,6 +6,42 @@ from flask import request, abort
 import jwt
 import re
 
+from consul import Consul, Check
+
+# Adding MS to consul
+
+consul_port = 8500
+service_name = "discounts"
+service_port = 5006
+
+
+def register_to_consul():
+    consul = Consul(host="consul", port=consul_port)
+
+    agent = consul.agent
+
+    service = agent.service
+
+    check = Check.http(f"http://{service_name}:{service_port}/", interval="10s", timeout="5s", deregister="1s")
+
+    service.register(service_name, service_id=service_name, port=service_port, check=check)
+
+
+def get_service(service_id):
+    consul = Consul(host="consul", port=consul_port)
+
+    agent = consul.agent
+
+    service_list = agent.services()
+
+    service_info = service_list[service_id]
+
+    return service_info['Address'], service_info['Port']
+
+
+register_to_consul()
+
+
 # Testing Methods
 # Coupon CRUD
 #####################################################################################################
@@ -207,12 +243,15 @@ def has_role(arg):
                 return fn(*args, **kwargs)
             except Exception as e:
                 abort(401)
+
         return decorated_view
+
     return has_role_inner
 
 
 def decode_token(token):
     return jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
+
 
 # Invoices
 #####################################################################################################
@@ -290,6 +329,7 @@ def postUserRank(user_id, user_rank):
             buying_discount_service.add_medal_to_user(user_id, user_rank)
         return 200
 
+
 # Information sending
 #####################################################################################################
 #####################################################################################################
@@ -316,6 +356,7 @@ def applyDiscountForUserBuyingProduct(user_id, price_to_pay):
 
     return coupon_discount
 
+
 @has_role('payment')
 def applyDiscountForUserRentingBike(user_id, price_to_pay):
     medal_discount = renting_discount_service.calculate_discount(user_id=user_id,
@@ -325,6 +366,7 @@ def applyDiscountForUserRentingBike(user_id, price_to_pay):
                                                        initial_price=medal_discount)
 
     return coupon_discount
+
 
 @has_role('payment')
 def applyDiscountForUserPayingParking(user_id, price_to_pay):

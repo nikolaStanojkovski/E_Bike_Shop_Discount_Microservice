@@ -4,3 +4,4 @@ connexion[swagger-ui]~=2.7.0
 sqlalchemy
 marshmallow
 pyjwt
+python-consul
