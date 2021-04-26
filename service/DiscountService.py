@@ -17,6 +17,9 @@ class ParkingDiscountService:
         else:
             return {}
 
+    def add_medal_to_user(self, user_id, user_rank_body):
+        return self.parking_discount_repository.update_user_medal(user_id, user_rank_body)
+
     def parking_discount_add(self, parking_discount_body):
         parking_discount_by_user = self.read_parking_discount_by_user(parking_discount_body['userId'])
         if parking_discount_by_user:
@@ -92,10 +95,13 @@ class BuyingDiscountService:
         else:
             return {}
 
+    def add_medal_to_user(self, user_id, user_rank_body):
+        return self.buying_discount_repository.update_user_medal(user_id, user_rank_body)
+
     def buying_discount_add(self, buying_discount_body):
         buying_discount_by_user = self.read_buying_discount_by_user(buying_discount_body['userId'])
         if buying_discount_by_user:
-            return {'error': 'User with id {} already has a buying discount'.format(buying_discount_body['userId'])}
+            return {'error': 'User with id {} already has a buying discount'.format(buying_discount_body['userId'])}, 404
 
         valid_from = datetime.now()
         valid_until = datetime.now()
@@ -155,7 +161,6 @@ class BuyingDiscountService:
             return initial_price
 
 
-
 class RentingDiscountService:
 
     def __init__(self):
@@ -167,6 +172,9 @@ class RentingDiscountService:
             return renting_discount
         else:
             return {}
+
+    def add_medal_to_user(self, user_id, user_rank_body):
+        return self.renting_discount_repository.update_user_medal(user_id, user_rank_body)
 
     def renting_discount_add(self, renting_discount_body):
         renting_discount_by_user = self.read_renting_discount_by_user(renting_discount_body['userId'])

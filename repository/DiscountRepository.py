@@ -56,6 +56,20 @@ class BuyingDiscountRepository:
     def buying_discount_findAll(self):
         return db.session.query(BuyingDiscount)
 
+    def update_user_medal(self, user_id, user_rank):
+        discount = db.session.query(BuyingDiscount).filter_by(userId=user_id).first()
+        if discount:
+            discount.discountRank_type = user_rank['discountRank_type']
+
+            db.session.commit()
+            updated_discount = db.session.query(BuyingDiscount).filter_by(userId=user_id).first()
+            if updated_discount:
+                return result_prettifier(updated_discount), 200
+            else:
+                return {'error': 'Discount with user id {} not found'.format(user_id)}, 404
+        else:
+            return {'error': 'Discount with user id {} not found'.format(user_id)}, 404
+
     def buying_discount_update(self, buying_discount_id, buying_discount_body):
         discount = db.session.query(BuyingDiscount).filter_by(id=buying_discount_id).first()
 
@@ -117,6 +131,21 @@ class ParkingDiscountRepository:
 
     def parking_discount_findAll(self):
         return db.session.query(ParkingDiscount)
+
+    def update_user_medal(self, user_id, user_rank):
+        discount = db.session.query(ParkingDiscount).filter_by(userId=user_id).first()
+        if discount:
+            discount.discountRank_type = user_rank['discountRank_type']
+
+            db.session.commit()
+            updated_discount = db.session.query(ParkingDiscount).filter_by(userId=user_id).first()
+            if updated_discount:
+                return result_prettifier(updated_discount), 200
+            else:
+                return {'error': 'Discount with user id {} not found'.format(user_id)}, 404
+        else:
+            return {'error': 'Discount with user id {} not found'.format(user_id)}, 404
+
 
     def parking_discount_update(self, parking_discount_id, parking_discount_body):
         discount = db.session.query(ParkingDiscount).filter_by(id=parking_discount_id).first()
@@ -180,6 +209,20 @@ class RentingDiscountRepository:
             return result_prettifier(discount)
         else:
             return {'error': 'Renting discount with id {} not found'.format(renting_discount_id)}, 404
+
+    def update_user_medal(self, user_id, user_rank):
+        discount = db.session.query(RentingDiscount).filter_by(userId=user_id).first()
+        if discount:
+            discount.discountRank_type = user_rank['discountRank_type']
+
+            db.session.commit()
+            updated_discount = db.session.query(RentingDiscount).filter_by(userId=user_id).first()
+            if updated_discount:
+                return result_prettifier(updated_discount), 200
+            else:
+                return {'error': 'Discount with user id {} not found'.format(user_id)}, 404
+        else:
+            return {'error': 'Discount with user id {} not found'.format(user_id)}, 404
 
     def renting_discount_update(self, renting_discount_id, renting_discount_body):
         renting_discount = db.session.query(RentingDiscount).filter_by(id=renting_discount_id).first()

@@ -395,6 +395,22 @@ paths:
         200:
           description: Posted information for 5 least bought products
 
+  /postUserRank/{user_id}:
+    post:
+      security:
+        - jwt: ['secret']
+      tags: [ Post User Rank ]
+      operationId: app.postUserRank
+      summary: Post information for assigning medal to user
+      parameters:
+        - $ref: '#/parameters/user_id'
+        - $ref: '#/parameters/user_rank'
+      responses:
+        200:
+          description: Successfully assigned medal to user
+        404:
+          description: Bad request
+
   /applyDiscountForUserBuyingProduct/{user_id}:
     post:
       security:
@@ -534,7 +550,7 @@ parameters:
     description: The id of the user we are looking for to find the coupon from
     in: path
     required: true
-    type: integer # Nikola ova go smeniv od string vo integer, oti neli po dogovor rekovme deka ke bide integer id-to na user-ot
+    type: integer
 
   coupon_body_discount:
     name: coupon_body_discount
@@ -592,3 +608,13 @@ parameters:
         PriceToPay:
           type: number
           format: double
+  user_rank:
+    name: user_rank
+    description: Medal to be assigned to user
+    in: body
+    schema:
+      required:
+        - discountRank_type
+      properties:
+        discountRank_type:
+          type: string

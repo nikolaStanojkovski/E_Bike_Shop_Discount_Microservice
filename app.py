@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 from flask import request, abort
 import jwt
-
+import re
 
 # Testing Methods
 # Coupon CRUD
@@ -214,7 +214,6 @@ def has_role(arg):
 def decode_token(token):
     return jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
 
-
 # Invoices
 #####################################################################################################
 
@@ -231,13 +230,43 @@ def addNewCoupon(coupon_body):
 def postInformationFor5MostBoughtProducts(product_ids):
     return product_discount_service.postInformationFor5MostBoughtProducts(product_ids)
 
+
 @has_role('statistics')
 def postInformationFor5LeastBoughtProducts(product_ids):
     return product_discount_service.postInformationFor5LeastBoughtProducts(product_ids)
 
 
-# TODO: postUserRank(body: userId, userRank)
+@has_role('statistics')
+def postUserRank(user_id, user_rank):
+    medal = user_rank['discountRank_type']
+    splitted = re.sub('([A-Z][a-z]+)', r' \1', re.sub('([A-Z]+)', r' \1', medal)).split()
 
+    if splitted[1] == 'Parking':
+        return parking_discount_service.add_medal_to_user(user_id, user_rank)
+    elif splitted[1] == 'Renting':
+        return renting_discount_service.add_medal_to_user(user_id, user_rank)
+    elif splitted[1] == 'Buying':
+        return buying_discount_service.add_medal_to_user(user_id, user_rank)
+    elif medal == 'Top10Monthly':
+        result = parking_discount_service.read_parking_discount_by_user(user_id)
+        if result:
+            return parking_discount_service.add_medal_to_user(user_id, user_rank)
+        result = renting_discount_service.read_renting_discount_by_user(user_id)
+        if result:
+            return renting_discount_service.add_medal_to_user(user_id, user_rank)
+        result = buying_discount_service.read_buying_discount_by_user(user_id)
+        if result:
+            return buying_discount_service.add_medal_to_user(user_id, user_rank)
+    elif medal == 'Top3Annually':
+        result = parking_discount_service.read_parking_discount_by_user(user_id)
+        if result:
+            return parking_discount_service.add_medal_to_user(user_id, user_rank)
+        result = renting_discount_service.read_renting_discount_by_user(user_id)
+        if result:
+            return renting_discount_service.add_medal_to_user(user_id, user_rank)
+        result = buying_discount_service.read_buying_discount_by_user(user_id)
+        if result:
+            return buying_discount_service.add_medal_to_user(user_id, user_rank)
 
 # Information sending
 #####################################################################################################
