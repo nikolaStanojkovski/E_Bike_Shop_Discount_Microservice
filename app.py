@@ -12,17 +12,17 @@ from consul import Consul, Check
 
 consul_port = 8500
 service_name = "discounts"
-service_port = 5006
+service_port = 5000
 
 
 def register_to_consul():
-    consul = Consul(host="consul", port=consul_port)
+    consul = Consul(host='consul', port=consul_port)
 
     agent = consul.agent
 
     service = agent.service
 
-    check = Check.http(f"http://{service_name}:{service_port}/", interval="10s", timeout="5s", deregister="1s")
+    check = Check.http(f"http://{service_name}:{service_port}/api/ui", interval="10s", timeout="5s", deregister="1s")
 
     service.register(service_name, service_id=service_name, port=service_port, check=check)
 
@@ -393,7 +393,6 @@ connexion_app.add_api("api.yml")
 from service.UserCouponService import UserCouponService
 from service.DiscountService import RentingDiscountService, BuyingDiscountService, ParkingDiscountService
 from service.ProductDiscountService import ProductDiscountService
-from models.Roles import Role
 
 couponService = UserCouponService()
 renting_discount_service = RentingDiscountService()
