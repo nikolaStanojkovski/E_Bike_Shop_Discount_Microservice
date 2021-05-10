@@ -7,6 +7,7 @@ import jwt
 import re
 
 from consul import Consul, Check
+from consul_functions import get_host_name_IP, get_consul_service, register_to_consul
 
 # Adding MS to consul
 
@@ -256,7 +257,7 @@ def decode_token(token):
 # Invoices
 #####################################################################################################
 
-@has_role('invoices')
+@has_role(['invoices'])
 def addNewCoupon(coupon_body):
     found_coupon = couponService.Add_Coupon(coupon_body=coupon_body, user_id=coupon_body['userId'])
     return found_coupon
@@ -265,17 +266,27 @@ def addNewCoupon(coupon_body):
 # Statistics
 #####################################################################################################
 
-@has_role('statistics')
-def postInformationFor5MostBoughtProducts(product_ids):
-    return product_discount_service.postInformationFor5MostBoughtProducts(product_ids)
+@has_role(['statistics'])
+def postInformationFor5MostBoughtProducts():
+
+    target_function = "get_top_monthly_products"
+
+    product_ids = statistics_request(5, target_function)
+
+    product_discount_service.postInformationFor5MostBoughtProducts(product_ids)
 
 
-@has_role('statistics')
-def postInformationFor5LeastBoughtProducts(product_ids):
-    return product_discount_service.postInformationFor5LeastBoughtProducts(product_ids)
+@has_role(['statistics'])
+def postInformationFor5LeastBoughtProducts():
+
+    target_function = "get_end_monthly_products"
+
+    product_ids = statistics_request(5, target_function)
+
+    product_discount_service.postInformationFor5LeastBoughtProducts(product_ids)
 
 
-# @has_role('statistics')
+# @has_role(['statistics'])
 def postUserRank(user_id, user_rank):
     medal = user_rank['discountRank_type']
     splitted = re.sub('([A-Z][a-z]+)', r' \1', re.sub('([A-Z]+)', r' \1', medal)).split()
@@ -334,19 +345,45 @@ def postUserRank(user_id, user_rank):
 #####################################################################################################
 #####################################################################################################
 
+def get_statistics_url():
+
+    statistics_address, statistics_port = get_consul_service("statistics")
+    
+    url = "{}:{}".format(statistics_address, statistics_port)
+
+    if not url.startswith("http"):
+        url = "http://{}".format(url)
+    
+    return url
+
+
+def statistics_request(amount, target_function):
+    statistics_url = get_statistics_url()
+    url = "{}/api/{}/{}".format(statistics_url, target_function, amount)
+
+    headers = request.headers
+    auth_headers = {}
+    if 'Authorization' in headers:
+        auth_headers["Authorization"] = headers['Authorization']
+    
+    statistics_response = requests.get(url=url, headers = auth_headers, json=amount_data)
+
+    return statistics_response
 
 # Inventory
 #####################################################################################################
 
-@has_role('inventory')
+@has_role(['inventory'])
 def getAllValidProductDiscounts():
+    self.postInformationFor5MostBoughtProducts()
+    self.postInformationFor5LeastBoughtProducts()
     return product_discount_service.getAllValidProductDiscounts()
 
 
 # Payment
 #####################################################################################################
 
-@has_role('payment')
+@has_role(['payment'])
 def applyDiscountForUserBuyingProduct(user_id, price_to_pay):
     medal_discount = buying_discount_service.calculate_discount(user_id=user_id,
                                                                 initial_price=price_to_pay['PriceToPay'])
@@ -357,7 +394,7 @@ def applyDiscountForUserBuyingProduct(user_id, price_to_pay):
     return coupon_discount
 
 
-@has_role('payment')
+@has_role(['payment'])
 def applyDiscountForUserRentingBike(user_id, price_to_pay):
     medal_discount = renting_discount_service.calculate_discount(user_id=user_id,
                                                                  initial_price=price_to_pay['PriceToPay'])
@@ -368,7 +405,7 @@ def applyDiscountForUserRentingBike(user_id, price_to_pay):
     return coupon_discount
 
 
-@has_role('payment')
+@has_role(['payment'])
 def applyDiscountForUserPayingParking(user_id, price_to_pay):
     medal_discount = parking_discount_service.calculate_discount(user_id=user_id,
                                                                  initial_price=price_to_pay['PriceToPay'])

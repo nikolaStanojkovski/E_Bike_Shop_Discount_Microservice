@@ -369,31 +369,31 @@ paths:
         200:
           description: Check if product with given id is on discount at the moment
 
-  /postInformationFor5MostBoughtProducts:
-    post:
-      security:
-        - jwt: [ 'secret' ]
-      tags: [ Product Discount ]
-      operationId: app.postInformationFor5MostBoughtProducts
-      summary: Post information for 5 most bought products
-      parameters:
-        - $ref: '#/parameters/product_ids'
-      responses:
-        200:
-          description: Posted information for 5 most bought products
+#  /postInformationFor5MostBoughtProducts:
+#    post:
+#      security:
+#        - jwt: [ 'secret' ]
+#      tags: [ Product Discount ]
+#      operationId: app.postInformationFor5MostBoughtProducts
+#      summary: Post information for 5 most bought products
+#      parameters:
+#        - $ref: '#/parameters/product_ids'
+#      responses:
+#        200:
+#          description: Posted information for 5 most bought products
 
-  /postInformationFor5LeastBoughtProducts:
-    post:
-      security:
-        - jwt: [ 'secret' ] 
-      tags: [ Product Discount ]
-      operationId: app.postInformationFor5LeastBoughtProducts
-      summary: Post information for 5 least bought products
-      parameters:
-        - $ref: '#/parameters/product_ids'
-      responses:
-        200:
-          description: Posted information for 5 least bought products
+#  /postInformationFor5LeastBoughtProducts:
+#    post:
+#      security:
+#        - jwt: [ 'secret' ] 
+#      tags: [ Product Discount ]
+#      operationId: app.postInformationFor5LeastBoughtProducts
+#      summary: Post information for 5 least bought products
+#      parameters:
+#        - $ref: '#/parameters/product_ids'
+#      responses:
+#        200:
+#          description: Posted information for 5 least bought products
 
   /postUserRank/{user_id}:
     post:
@@ -573,15 +573,15 @@ parameters:
     required: true
     type: integer
 
-  product_ids:
-    name: product_ids
-    description: The ids of products
-    in: body
-    required: true
-    schema:
-      type: array
-      items:
-        type: integer
+#  product_ids:
+#    name: product_ids
+#    description: The ids of products
+#    in: body
+#    required: true
+#    schema:
+#      type: array
+#      items:
+#        type: integer
 
   product_body:
     name: product_body
