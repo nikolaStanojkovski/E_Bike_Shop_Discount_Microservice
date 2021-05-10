@@ -7,7 +7,7 @@ import jwt
 import re
 
 from consul import Consul, Check
-from consul_functions import get_host_name_IP, get_consul_service, register_to_consul
+
 
 # Adding MS to consul
 
@@ -267,26 +267,22 @@ def addNewCoupon(coupon_body):
 #####################################################################################################
 
 @has_role(['statistics'])
-def postInformationFor5MostBoughtProducts():
+def getInformationFor5MostBoughtProducts():
 
-    target_function = "get_top_monthly_products"
-
-    product_ids = statistics_request(5, target_function)
+    product_ids = statistics_request("top", 5)
 
     product_discount_service.postInformationFor5MostBoughtProducts(product_ids)
 
 
 @has_role(['statistics'])
-def postInformationFor5LeastBoughtProducts():
+def getInformationFor5LeastBoughtProducts():
 
-    target_function = "get_end_monthly_products"
-
-    product_ids = statistics_request(5, target_function)
+    product_ids = statistics_request("end", 5)
 
     product_discount_service.postInformationFor5LeastBoughtProducts(product_ids)
 
 
-# @has_role(['statistics'])
+@has_role(['statistics'])
 def postUserRank(user_id, user_rank):
     medal = user_rank['discountRank_type']
     splitted = re.sub('([A-Z][a-z]+)', r' \1', re.sub('([A-Z]+)', r' \1', medal)).split()
@@ -345,9 +341,10 @@ def postUserRank(user_id, user_rank):
 #####################################################################################################
 #####################################################################################################
 
+
 def get_statistics_url():
 
-    statistics_address, statistics_port = get_consul_service("statistics")
+    statistics_address, statistics_port = self.get_service("statistics")
     
     url = "{}:{}".format(statistics_address, statistics_port)
 
@@ -357,16 +354,16 @@ def get_statistics_url():
     return url
 
 
-def statistics_request(amount, target_function):
+def statistics_request(list_label, list_size):
     statistics_url = get_statistics_url()
-    url = "{}/api/{}/{}".format(statistics_url, target_function, amount)
+    url = "{}/api/filter/product/month/{}/{}".format(statistics_url, list_label, list_size)
 
     headers = request.headers
     auth_headers = {}
     if 'Authorization' in headers:
         auth_headers["Authorization"] = headers['Authorization']
     
-    statistics_response = requests.get(url=url, headers = auth_headers, json=amount_data)
+    statistics_response = requests.get(url=url, headers = auth_headers)
 
     return statistics_response
 
@@ -375,8 +372,8 @@ def statistics_request(amount, target_function):
 
 @has_role(['inventory'])
 def getAllValidProductDiscounts():
-    self.postInformationFor5MostBoughtProducts()
-    self.postInformationFor5LeastBoughtProducts()
+    self.getInformationFor5MostBoughtProducts()
+    self.getInformationFor5LeastBoughtProducts()
     return product_discount_service.getAllValidProductDiscounts()
 
 
