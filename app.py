@@ -5,6 +5,7 @@ from functools import wraps
 from flask import request, abort
 import jwt
 import re
+import requests
 
 from consul import Consul, Check
 
@@ -250,6 +251,8 @@ def has_role(arg):
     return has_role_inner
 
 
+JWT_SECRET = 'DISCOUNTS MS SECRET'
+
 def decode_token(token):
     return jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
 
@@ -344,7 +347,7 @@ def postUserRank(user_id, user_rank):
 
 def get_statistics_url():
 
-    statistics_address, statistics_port = self.get_service("statistics")
+    statistics_address, statistics_port = get_service("statistics")
     
     url = "{}:{}".format(statistics_address, statistics_port)
 
@@ -372,15 +375,15 @@ def statistics_request(list_label, list_size):
 
 @has_role(['inventory'])
 def getAllValidProductDiscounts():
-    self.getInformationFor5MostBoughtProducts()
-    self.getInformationFor5LeastBoughtProducts()
+    getInformationFor5MostBoughtProducts()
+    getInformationFor5LeastBoughtProducts()
     return product_discount_service.getAllValidProductDiscounts()
 
 
 # Payment
 #####################################################################################################
 
-@has_role(['payment'])
+@has_role(['payments'])
 def applyDiscountForUserBuyingProduct(user_id, price_to_pay):
     medal_discount = buying_discount_service.calculate_discount(user_id=user_id,
                                                                 initial_price=price_to_pay['PriceToPay'])
@@ -391,7 +394,7 @@ def applyDiscountForUserBuyingProduct(user_id, price_to_pay):
     return coupon_discount
 
 
-@has_role(['payment'])
+@has_role(['payments'])
 def applyDiscountForUserRentingBike(user_id, price_to_pay):
     medal_discount = renting_discount_service.calculate_discount(user_id=user_id,
                                                                  initial_price=price_to_pay['PriceToPay'])
@@ -402,7 +405,7 @@ def applyDiscountForUserRentingBike(user_id, price_to_pay):
     return coupon_discount
 
 
-@has_role(['payment'])
+@has_role(['payments'])
 def applyDiscountForUserPayingParking(user_id, price_to_pay):
     medal_discount = parking_discount_service.calculate_discount(user_id=user_id,
                                                                  initial_price=price_to_pay['PriceToPay'])
