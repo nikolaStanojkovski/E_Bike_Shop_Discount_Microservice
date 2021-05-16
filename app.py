@@ -9,12 +9,12 @@ import requests
 
 from consul import Consul, Check
 
-
 # Adding MS to consul
 
 consul_port = 8500
 service_name = "discounts"
 service_port = 5000
+JWT_SECRET = 'USER MS SECRET'
 
 
 def register_to_consul():
@@ -251,8 +251,6 @@ def has_role(arg):
     return has_role_inner
 
 
-JWT_SECRET = 'DISCOUNTS MS SECRET'
-
 def decode_token(token):
     return jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
 
@@ -271,7 +269,6 @@ def addNewCoupon(coupon_body):
 
 @has_role(['statistics'])
 def getInformationFor5MostBoughtProducts():
-
     product_ids = statistics_request("top", 5)
 
     product_discount_service.postInformationFor5MostBoughtProducts(product_ids)
@@ -279,7 +276,6 @@ def getInformationFor5MostBoughtProducts():
 
 @has_role(['statistics'])
 def getInformationFor5LeastBoughtProducts():
-
     product_ids = statistics_request("end", 5)
 
     product_discount_service.postInformationFor5LeastBoughtProducts(product_ids)
@@ -346,14 +342,13 @@ def postUserRank(user_id, user_rank):
 
 
 def get_statistics_url():
-
     statistics_address, statistics_port = get_service("statistics")
-    
+
     url = "{}:{}".format(statistics_address, statistics_port)
 
     if not url.startswith("http"):
         url = "http://{}".format(url)
-    
+
     return url
 
 
@@ -365,10 +360,11 @@ def statistics_request(list_label, list_size):
     auth_headers = {}
     if 'Authorization' in headers:
         auth_headers["Authorization"] = headers['Authorization']
-    
-    statistics_response = requests.get(url=url, headers = auth_headers)
+
+    statistics_response = requests.get(url=url, headers=auth_headers)
 
     return statistics_response
+
 
 # Inventory
 #####################################################################################################

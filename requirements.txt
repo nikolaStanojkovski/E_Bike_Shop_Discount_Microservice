@@ -1,7 +1,9 @@
-Flask
+Flask~=1.1.2
 Flask-Migrate
 connexion[swagger-ui]~=2.7.0
-sqlalchemy
-marshmallow
-pyjwt
+sqlalchemy~=1.4.9
+marshmallow~=3.11.1
+pyjwt~=2.0.1
 python-consul
+requests~=2.25.1
+alembic~=1.5.8
