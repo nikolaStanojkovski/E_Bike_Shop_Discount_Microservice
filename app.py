@@ -3,18 +3,84 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from functools import wraps
 from flask import request, abort
-import jwt
 import re
+import jwt
 import requests
+import time
 
 from consul import Consul, Check
+
+
+# Authorization
+
+JWT_SECRET = 'USER MS SECRET'
+DISCOUNTS_APIKEY = 'DISCOUNTS MS SECRET'
+JWT_LIFETIME_SECONDS = 600000 - 120
+AUTH_HEADER = {}
+TOKEN_CREATION_TIME = time.time() - JWT_LIFETIME_SECONDS - 1
+
+
+def get_jwt_token_from_user_ms():
+    # http://localhost:5010/api/user/auth-microservice
+
+    user_ms_url = get_user_url()
+
+    url = "{}/api/user/{}".format(user_ms_url, 'auth-microservice')
+    # url = "{}/api/user/{}".format("http://localhost:5010", 'auth-microservice')
+
+    apikey_json = {"apikey": DISCOUNTS_APIKEY}
+
+    user_auth_microservice_response = requests.post(url=url, json=apikey_json)
+
+    return user_auth_microservice_response.json()
+
+
+def update_jwt_token():
+
+    global TOKEN_CREATION_TIME
+    global AUTH_HEADER
+
+    if time.time() - TOKEN_CREATION_TIME > JWT_LIFETIME_SECONDS:
+        print("Updating token")
+        jwt_token = get_jwt_token_from_user_ms()
+        auth_value = "Bearer {}".format(jwt_token)
+        AUTH_HEADER = {"Authorization": auth_value}
+        TOKEN_CREATION_TIME = time.time()
+
+
+def has_role(arg):
+    def has_role_inner(fn):
+        @wraps(fn)
+        def decode_view(*args, **kwargs):
+            try:
+                headers = request.headers
+                if 'Authorization' in headers:
+                    token = headers['Authorization'].split(' ')[1]
+                    decoded_token = decode_token(token)
+                    if 'admin' in decoded_token:
+                        return fn(*args, **kwargs)
+                    for role in arg:
+                        if role in decoded_token['roles']:
+                            return fn(*args, **kwargs)
+                    abort(404)
+                return fn(*args, **kwargs)
+            except Exception as e:
+                abort(401)
+
+        return decode_view
+
+    return has_role_inner
+
+
+def decode_token(token):
+    return jwt.decode(token, JWT_SECRET, algorithms='HS256')
+
 
 # Adding MS to consul
 
 consul_port = 8500
 service_name = "discounts"
 service_port = 5000
-JWT_SECRET = 'USER MS SECRET'
 
 
 def register_to_consul():
@@ -41,7 +107,7 @@ def get_service(service_id):
     return service_info['Address'], service_info['Port']
 
 
-register_to_consul()
+# register_to_consul()
 
 
 # Testing Methods
@@ -225,36 +291,6 @@ def checkIfProductIsOnDiscountAtTheMoment(product_id):
 #####################################################################################################
 
 
-# Authorization 
-#####################################################################################################
-def has_role(arg):
-    def has_role_inner(fn):
-        @wraps(fn)
-        def decorated_view(*args, **kwargs):
-            try:
-                headers = request.headers
-                if 'AUTHORIZATION' in headers:
-                    token = headers['AUTHORIZATION'].split(' ')[1]
-                    decoded_token = decode_token(token)
-                    if 'admin' in decoded_token['roles']:
-                        return fn(*args, **kwargs)
-                    for role in arg:
-                        if role in decoded_token['roles']:
-                            return fn(*args, **kwargs)
-                    abort(401)
-                return fn(*args, **kwargs)
-            except Exception as e:
-                abort(401)
-
-        return decorated_view
-
-    return has_role_inner
-
-
-def decode_token(token):
-    return jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
-
-
 # Invoices
 #####################################################################################################
 
@@ -267,7 +303,7 @@ def addNewCoupon(coupon_body):
 # Statistics
 #####################################################################################################
 
-@has_role(['statistics'])
+# @has_role(['statistics'])
 def getInformationFor5MostBoughtProducts():
     product_ids = statistics_request("top", 5)
 
@@ -352,16 +388,26 @@ def get_statistics_url():
     return url
 
 
+def get_user_url():
+    user_address, user_port = get_service("user")
+
+    url = "{}:{}".format(user_address, user_port)
+
+    if not url.startswith("http"):
+        url = "http://{}".format(url)
+
+    return url
+
+
 def statistics_request(list_label, list_size):
+    global AUTH_HEADER
+
     statistics_url = get_statistics_url()
     url = "{}/api/filter/product/month/{}/{}".format(statistics_url, list_label, list_size)
 
-    headers = request.headers
-    auth_headers = {}
-    if 'Authorization' in headers:
-        auth_headers["Authorization"] = headers['Authorization']
+    update_jwt_token()
 
-    statistics_response = requests.get(url=url, headers=auth_headers)
+    statistics_response = requests.get(url=url, headers=AUTH_HEADER)
 
     return statistics_response
 
@@ -421,6 +467,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 connexion_app.add_api("api.yml")
+update_jwt_token()
 
 # reference of services and models
 from service.UserCouponService import UserCouponService

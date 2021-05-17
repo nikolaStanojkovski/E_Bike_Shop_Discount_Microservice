@@ -13,8 +13,10 @@ securityDefinitions:
     type: apiKey
     name: Authorization
     in: header
-    x-authentication-scheme: Bearer
+    x-authentication-scheme: bearer
     x-bearerInfoFunc: app.decode_token
+security:
+ - jwt: []
 paths:
   /coupons/:
     get:
@@ -617,4 +619,14 @@ parameters:
         - discountRank_type
       properties:
         discountRank_type:
+          type: string
+  auth_body_microservice:
+    name: auth_body_microservice
+    description: login and get token for microservices
+    in: body
+    schema:
+      required:
+        - apikey
+      properties:
+        apikey:
           type: string
