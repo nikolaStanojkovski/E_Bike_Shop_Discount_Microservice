@@ -3,7 +3,7 @@
 <hr />
 
 ## Service Oriented Architectures (SOA) Project by:
-## <i>Nikola Stanojkovski, Tashko Pavlov, Filip Iliev, Marko Panushkovski</i>
+### <i>Nikola Stanojkovski, Tashko Pavlov, Filip Iliev, Marko Panushkovski</i>
 
 <hr />
 <hr />
